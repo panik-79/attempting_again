@@ -357,6 +357,11 @@ public class Utils {
         SORTING TRICKS
     ============================================================ */
 
+    // Sort int[] in ascending order
+    public static void sortAsc(int[] arr) {
+        Arrays.sort(arr);
+    }
+
     // Sort int[] in descending order
     public static void sortDesc(int[] arr) {
         // Box, sort reversed, unbox

@@ -4,6 +4,7 @@ import util.Utils;
 
 import java.util.Arrays;
 
+// https://takeuforward.org/plus/dsa/problems/move-zeros-to-end?subject=dsa
 public class MoveZerosToEnd {
 
     public static void main(String[] args) {

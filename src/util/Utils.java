@@ -8,7 +8,6 @@ public class Utils {
     /* ============================================================
         FAST INPUT
     ============================================================ */
-
     public static class FastScanner {
         BufferedReader br;
         StringTokenizer st;
@@ -21,7 +20,7 @@ public class Utils {
             br = new BufferedReader(new FileReader(filename));
         }
 
-        String next() {
+        public String next() {
             while (st == null || !st.hasMoreElements()) {
                 try {
                     st = new StringTokenizer(br.readLine());
@@ -32,23 +31,23 @@ public class Utils {
             return st.nextToken();
         }
 
-        int nextInt() { return Integer.parseInt(next()); }
-        long nextLong() { return Long.parseLong(next()); }
-        double nextDouble() { return Double.parseDouble(next()); }
+        public int nextInt()       { return Integer.parseInt(next()); }
+        public long nextLong()     { return Long.parseLong(next()); }
+        public double nextDouble() { return Double.parseDouble(next()); }
 
-        int[] nextIntArray(int n) {
+        public int[] nextIntArray(int n) {
             int[] arr = new int[n];
             for (int i = 0; i < n; i++) arr[i] = nextInt();
             return arr;
         }
 
-        long[] nextLongArray(int n) {
+        public long[] nextLongArray(int n) {
             long[] arr = new long[n];
             for (int i = 0; i < n; i++) arr[i] = nextLong();
             return arr;
         }
 
-        int[][] nextIntMatrix(int r, int c) {
+        public int[][] nextIntMatrix(int r, int c) {
             int[][] mat = new int[r][c];
             for (int i = 0; i < r; i++)
                 for (int j = 0; j < c; j++)
@@ -56,7 +55,7 @@ public class Utils {
             return mat;
         }
 
-        String nextLine() {
+        public String nextLine() {
             try { return br.readLine(); }
             catch (IOException e) { return ""; }
         }
@@ -357,6 +356,11 @@ public class Utils {
     /* ============================================================
         SORTING TRICKS
     ============================================================ */
+
+    // Sort int[] in ascending order
+    public static void sortAsc(int[] arr) {
+        Arrays.sort(arr);
+    }
 
     // Sort int[] in descending order
     public static void sortDesc(int[] arr) {

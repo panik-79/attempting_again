@@ -1,5 +1,7 @@
 package collections;
 
+import util.Utils;
+
 // custom class
 class Data {
     private String name;
@@ -27,7 +29,13 @@ class Data {
         this.name = name;
     }
 
-
+    @Override
+    public String toString() {
+        return "Data{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }
 
 public class Basics {
@@ -41,7 +49,9 @@ public class Basics {
         System.out.println("d2 at time t - Name: " + d2.getName() + ", Age: " + d2.getAge());
 
         d1.setAge(d1.getAge() + 2);
-
         System.out.println("d1 after t+2 yrs - Name: " + d1.getName() + ", Age: " + d1.getAge());
+
+        Utils.println(d1);
+        Utils.println(d2);
     }
 }

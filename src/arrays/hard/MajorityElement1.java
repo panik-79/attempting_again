@@ -83,12 +83,46 @@ public class MajorityElement1 {
         return -1;
     }
 
-    // Moore's voting algo - TC: O(n), SC: O(1)
-    public static int optimalFindMajorityElement (int[] arr) {
+    // Moore's Voting Algorithm - Time Complexity: O(n), Space Complexity: O(1)
+    public static int optimalFindMajorityElement(int[] arr) {
 
         int n = arr.length;
+        // potential majority element
+        int candidate = getCandidate(arr);
 
+        // Verify if candidate is actually majority
+        int candidateCount = 0;
+        for (int el : arr) {
+            if (el == candidate) {
+                candidateCount++; // count occurrences of candidate
+            }
+        }
 
+        // Check if candidate occurs more than n/2 times
+        if (candidateCount > n / 2) {
+            return candidate;
+        }
+
+        // no majority element exists
+        return -1; 
+    }
+
+    private static int getCandidate(int[] arr) {
+        int candidate = arr[0];
+        int count = 0;          // count for candidate
+
+        // Find a potential candidate
+        for (int el : arr) {
+            if (count == 0) {
+                count = 1;      // reset count and choose new candidate
+                candidate = el;
+            } else if (el == candidate) {
+                count++;        // increment count for same element
+            } else {
+                count--;        // decrement count for different element
+            }
+        }
+        return candidate;
     }
 
 }

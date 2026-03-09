@@ -1,5 +1,6 @@
 package arrays.medium;
 
+import util.ArrayUtils;
 import util.Utils;
 
 import java.util.ArrayList;
@@ -13,21 +14,19 @@ public class UnionOfTwoSortedArrays {
 
         Utils.FastScanner scanner = new Utils.FastScanner();
 
+        Utils.print("Enter size of array1: ");
         int s1 = scanner.nextInt();
-        int[] a1 = scanner.nextIntArray(s1);
+        int[] a1 = ArrayUtils.randomSortedIntArray(s1, 1, 20);
 
+        Utils.print("Enter size of array2: ");
         int s2 = scanner.nextInt();
-        int[] a2 = scanner.nextIntArray(s2);
+        int[] a2 = ArrayUtils.randomSortedIntArray(s2, 1, 20);
 
         // Edge case: if any array is empty
         if (s1 <= 0 || s2 <= 0) {
             Utils.println("Empty input array");
             return;
         }
-
-        // Ensure arrays are sorted (problem assumes sorted arrays)
-        Utils.sortAsc(a1);
-        Utils.sortAsc(a2);
 
         Utils.println("Input array1: " + Arrays.toString(a1));
         Utils.println("Input array2: " + Arrays.toString(a2));

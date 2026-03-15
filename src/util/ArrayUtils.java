@@ -676,9 +676,9 @@ public final class ArrayUtils {
     }
 
     /** Returns the sum of all elements. */
-    public static long sum(int[] arr) {
+    public static int sum(int[] arr) {
         requireNonNull(arr);
-        long s = 0;
+        int s = 0;
         for (int v : arr) s += v;
         return s;
     }
@@ -852,7 +852,42 @@ public final class ArrayUtils {
 
 
     // ═══════════════════════════════════════════════════════════════
-    //  SECTION 8 ── VALIDATION HELPERS (PRIVATE)
+    //  SECTION 8 ── ARRAYLIST UTILITIES
+    // ═══════════════════════════════════════════════════════════════
+
+    /** Generates an ArrayList pre-filled with a specific value. */
+    public static <T> ArrayList<T> getPrefilledArrayList(int size, T value) {
+        validateSize(size);
+        return new ArrayList<>(Collections.nCopies(size, value));
+    }
+
+    /** Generates an ArrayList pre-filled with 0s (Integer). */
+    public static ArrayList<Integer> getPrefilledArrayList(int size) {
+        return getPrefilledArrayList(size, 0);
+    }
+
+    /** Returns a reversed copy of a List as an ArrayList. */
+    public static <T> ArrayList<T> reversedCopy(List<T> list) {
+        requireNonNull(list);
+        ArrayList<T> copy = new ArrayList<>(list);
+        Collections.reverse(copy);
+        return copy;
+    }
+
+    /** Reverses a List in-place. */
+    public static <T> void reverseInPlace(List<T> list) {
+        requireNonNull(list);
+        Collections.reverse(list);
+    }
+
+    /** Creates an ArrayList from variable arguments. */
+    @SafeVarargs
+    public static <T> ArrayList<T> asArrayList(T... elements) {
+        return new ArrayList<>(Arrays.asList(elements));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  SECTION 9 ── VALIDATION HELPERS (PRIVATE)
     // ═══════════════════════════════════════════════════════════════
 
     private static void requireNonNull(Object obj) {
@@ -879,12 +914,12 @@ public final class ArrayUtils {
 
 
     // ═══════════════════════════════════════════════════════════════
-    //  SECTION 9 ── DEMO MAIN
+    //  SECTION 10 ── DEMO MAIN
     // ═══════════════════════════════════════════════════════════════
 
     public static void main(String[] args) {
         System.out.println("╔═══════════════════════════════╗");
-        System.out.println("║      ArrayUtil  Demo           ║");
+        System.out.println("║      ArrayUtil  Demo          ║");
         System.out.println("╚═══════════════════════════════╝\n");
 
         // Generation

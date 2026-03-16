@@ -18,8 +18,8 @@ public class MajorityElement2 {
         int[] arr = scanner.nextIntArray(size);
 
         Utils.println("Input array: " + Arrays.toString(arr));
-        List<Integer> majorityEl = bruteFindMajorityElements(arr);
-        Utils.println("Majority element: " + majorityEl);
+        List<Integer> majorityEls = bruteFindMajorityElements(arr);
+        Utils.println("Majority elements: " + majorityEls);
 
     }
 

@@ -871,6 +871,27 @@ public final class ArrayUtils {
         return getPrefilledArrayList(size, 0);
     }
 
+    public static List<List<Integer>> getPrefilledMatrix(int rows, int cols) {
+        return getPrefilledMatrix(rows, cols, 0);
+    }
+
+    public static <T> List<List<T>> getPrefilledMatrix(int rows, int cols, T defaultValue) {
+        validateSize(rows);
+        validateSize(cols);
+
+        List<List<T>> result = new ArrayList<>(rows);
+
+        for (int i = 0; i < rows; i++) {
+            List<T> row = new ArrayList<>(cols);
+            for (int j = 0; j < cols; j++) {
+                row.add(defaultValue);
+            }
+            result.add(row);
+        }
+
+        return result;
+    }
+
     /** Returns a reversed copy of a List as an ArrayList. */
     public static <T> ArrayList<T> reversedCopy(List<T> list) {
         requireNonNull(list);

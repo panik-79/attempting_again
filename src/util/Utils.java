@@ -83,6 +83,21 @@ public class Utils {
         System.out.println(sb.toString().trim());
     }
 
+    public static int[][] to2DArray(List<List<Integer>> list) {
+        int rows = list.size();
+        int cols = list.get(0).size();
+
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            List<Integer> row = list.get(i);
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = row.get(j);
+            }
+        }
+        return result;
+    }
+
     public static void print2D(int[][] arr) {
         StringBuilder sb = new StringBuilder();
         for (int[] row : arr) {

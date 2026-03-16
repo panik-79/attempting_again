@@ -836,6 +836,11 @@ public final class ArrayUtils {
         for (int[] row : matrix) System.out.println(Arrays.toString(row));
     }
 
+    public static void printMatrix(List<List<Integer>> matrix) {
+        requireNonNull(matrix);
+        for (List<Integer> row : matrix) System.out.println(Arrays.toString(row.toArray()));
+    }
+
     /** Prints elements one per line with their index. */
     public static void printIndexed(int[] arr) {
         requireNonNull(arr);

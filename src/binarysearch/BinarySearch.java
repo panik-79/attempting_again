@@ -30,7 +30,7 @@ public class BinarySearch {
 
         int size = arr.length;
         int leftPtr = 0;
-        int rightPtr = size-1;
+        int rightPtr = size - 1;
 
         while (leftPtr <= rightPtr) {
             int midIdx = leftPtr + (rightPtr - leftPtr) / 2;

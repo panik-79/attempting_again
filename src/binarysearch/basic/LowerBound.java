@@ -33,7 +33,7 @@ public class LowerBound {
         int potentialLowerBoundIdx = arr.length;
 
         while (leftPtr <= rightPtr) {
-            int midIdx = leftPtr + (rightPtr-leftPtr)/2;
+            int midIdx = leftPtr + (rightPtr - leftPtr) / 2;
             int midValue = arr[midIdx];
 
             if (midValue >= key) {

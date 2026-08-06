@@ -25,27 +25,27 @@ public class GroupAnagrams {
         Map<String, List<String>> mp = new HashMap<>();
 
         for (String s : arr) {
-            String binaryCode = getBinaryCode(s);
-            mp.computeIfAbsent(binaryCode, k -> new ArrayList<>()).add(s);
+            String hash = hash(s);
+            mp.computeIfAbsent(hash, k -> new ArrayList<>()).add(s);
         }
 
         return new ArrayList<>(mp.values());
     }
 
-    private static String getBinaryCode(String s) {
+    private static String hash(String s) {
         int[] count = new int[26];
 
         for (char c : s.toCharArray()) {
             count[c - 'a']++;
         }
 
-        StringBuilder key = new StringBuilder();
+        StringBuilder hash = new StringBuilder();
 
         for (int x : count) {
-            key.append(x).append('#');
+            hash.append(x).append('#');
         }
 
-        return key.toString();
+        return hash.toString();
     }
 
 }

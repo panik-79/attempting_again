@@ -2,6 +2,7 @@ package util;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.*;
 
 public class Utils {
 
@@ -11,6 +12,8 @@ public class Utils {
     public static class FastScanner {
         BufferedReader br;
         StringTokenizer st;
+        boolean interactive = false;
+        PrintStream promptStream = System.out;
 
         public FastScanner() {
             br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,10 +23,49 @@ public class Utils {
             br = new BufferedReader(new FileReader(filename));
         }
 
+        public FastScanner setInteractive(boolean enabled) {
+            this.interactive = enabled;
+            return this;
+        }
+
+        public boolean isInteractive() {
+            return this.interactive;
+        }
+
+        public FastScanner setPromptStream(PrintStream ps) {
+            this.promptStream = ps;
+            return this;
+        }
+
+        private void prompt(String msg) {
+            if (msg != null && promptStream != null) {
+                promptStream.print(msg);
+                promptStream.flush();
+            }
+        }
+
+        private void autoPrompt(String defaultPrompt) {
+            if (interactive) {
+                prompt(defaultPrompt);
+            }
+        }
+
         public String next() {
+            autoPrompt("Enter string token: ");
+            return nextToken();
+        }
+
+        public String next(String promptMsg) {
+            prompt(promptMsg);
+            return nextToken();
+        }
+
+        private String nextToken() {
             while (st == null || !st.hasMoreElements()) {
                 try {
-                    st = new StringTokenizer(br.readLine());
+                    String line = br.readLine();
+                    if (line == null) return null;
+                    st = new StringTokenizer(line);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -31,74 +73,605 @@ public class Utils {
             return st.nextToken();
         }
 
-        public int nextInt()       { return Integer.parseInt(next()); }
-        public long nextLong()     { return Long.parseLong(next()); }
-        public double nextDouble() { return Double.parseDouble(next()); }
+        private int readInt() { return Integer.parseInt(nextToken()); }
+        private long readLong() { return Long.parseLong(nextToken()); }
+        private double readDouble() { return Double.parseDouble(nextToken()); }
 
+        public int nextInt() {
+            autoPrompt("Enter integer: ");
+            return readInt();
+        }
+
+        public int nextInt(String promptMsg) {
+            prompt(promptMsg);
+            return readInt();
+        }
+
+        public long nextLong() {
+            autoPrompt("Enter long: ");
+            return readLong();
+        }
+
+        public long nextLong(String promptMsg) {
+            prompt(promptMsg);
+            return readLong();
+        }
+
+        public double nextDouble() {
+            autoPrompt("Enter double: ");
+            return readDouble();
+        }
+
+        public double nextDouble(String promptMsg) {
+            prompt(promptMsg);
+            return readDouble();
+        }
+
+        // 1D Arrays
         public int[] nextIntArray(int n) {
+            autoPrompt("Enter integer array (" + n + " elements): ");
             int[] arr = new int[n];
-            for (int i = 0; i < n; i++) arr[i] = nextInt();
+            for (int i = 0; i < n; i++) arr[i] = readInt();
+            return arr;
+        }
+
+        public int[] nextIntArray(int n, String promptMsg) {
+            prompt(promptMsg);
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) arr[i] = readInt();
             return arr;
         }
 
         public long[] nextLongArray(int n) {
+            autoPrompt("Enter long array (" + n + " elements): ");
             long[] arr = new long[n];
-            for (int i = 0; i < n; i++) arr[i] = nextLong();
+            for (int i = 0; i < n; i++) arr[i] = readLong();
             return arr;
         }
 
+        public long[] nextLongArray(int n, String promptMsg) {
+            prompt(promptMsg);
+            long[] arr = new long[n];
+            for (int i = 0; i < n; i++) arr[i] = readLong();
+            return arr;
+        }
+
+        public double[] nextDoubleArray(int n) {
+            autoPrompt("Enter double array (" + n + " elements): ");
+            double[] arr = new double[n];
+            for (int i = 0; i < n; i++) arr[i] = readDouble();
+            return arr;
+        }
+
+        public double[] nextDoubleArray(int n, String promptMsg) {
+            prompt(promptMsg);
+            double[] arr = new double[n];
+            for (int i = 0; i < n; i++) arr[i] = readDouble();
+            return arr;
+        }
+
+        public String[] nextStringArray(int n) {
+            autoPrompt("Enter string array (" + n + " elements): ");
+            String[] arr = new String[n];
+            for (int i = 0; i < n; i++) arr[i] = nextToken();
+            return arr;
+        }
+
+        public String[] nextStringArray(int n, String promptMsg) {
+            prompt(promptMsg);
+            String[] arr = new String[n];
+            for (int i = 0; i < n; i++) arr[i] = nextToken();
+            return arr;
+        }
+
+        public <T> T[] nextArray(int n, IntFunction<T[]> generator, Supplier<T> reader) {
+            autoPrompt("Enter array (" + n + " elements): ");
+            T[] arr = generator.apply(n);
+            for (int i = 0; i < n; i++) arr[i] = reader.get();
+            return arr;
+        }
+
+        public <T> T[] nextArray(int n, String promptMsg, IntFunction<T[]> generator, Supplier<T> reader) {
+            prompt(promptMsg);
+            T[] arr = generator.apply(n);
+            for (int i = 0; i < n; i++) arr[i] = reader.get();
+            return arr;
+        }
+
+        // 2D Arrays (Matrices)
         public int[][] nextIntMatrix(int r, int c) {
+            autoPrompt("Enter integer matrix (" + r + "x" + c + "): ");
             int[][] mat = new int[r][c];
             for (int i = 0; i < r; i++)
                 for (int j = 0; j < c; j++)
-                    mat[i][j] = nextInt();
+                    mat[i][j] = readInt();
             return mat;
         }
 
+        public int[][] nextIntMatrix(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            int[][] mat = new int[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = readInt();
+            return mat;
+        }
+
+        public long[][] nextLongMatrix(int r, int c) {
+            autoPrompt("Enter long matrix (" + r + "x" + c + "): ");
+            long[][] mat = new long[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = readLong();
+            return mat;
+        }
+
+        public long[][] nextLongMatrix(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            long[][] mat = new long[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = readLong();
+            return mat;
+        }
+
+        public double[][] nextDoubleMatrix(int r, int c) {
+            autoPrompt("Enter double matrix (" + r + "x" + c + "): ");
+            double[][] mat = new double[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = readDouble();
+            return mat;
+        }
+
+        public double[][] nextDoubleMatrix(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            double[][] mat = new double[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = readDouble();
+            return mat;
+        }
+
+        public String[][] nextStringMatrix(int r, int c) {
+            autoPrompt("Enter string matrix (" + r + "x" + c + "): ");
+            String[][] mat = new String[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = nextToken();
+            return mat;
+        }
+
+        public String[][] nextStringMatrix(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            String[][] mat = new String[r][c];
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = nextToken();
+            return mat;
+        }
+
+        public <T> T[][] nextMatrix(int r, int c, BiFunction<Integer, Integer, T[][]> matrixGenerator, Supplier<T> reader) {
+            autoPrompt("Enter matrix (" + r + "x" + c + "): ");
+            T[][] mat = matrixGenerator.apply(r, c);
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = reader.get();
+            return mat;
+        }
+
+        public <T> T[][] nextMatrix(int r, int c, String promptMsg, BiFunction<Integer, Integer, T[][]> matrixGenerator, Supplier<T> reader) {
+            prompt(promptMsg);
+            T[][] mat = matrixGenerator.apply(r, c);
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
+                    mat[i][j] = reader.get();
+            return mat;
+        }
+
+        // 1D Lists
+        public List<Integer> nextIntList(int n) {
+            autoPrompt("Enter integer list (" + n + " elements): ");
+            List<Integer> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(readInt());
+            return list;
+        }
+
+        public List<Integer> nextIntList(int n, String promptMsg) {
+            prompt(promptMsg);
+            List<Integer> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(readInt());
+            return list;
+        }
+
+        public List<Long> nextLongList(int n) {
+            autoPrompt("Enter long list (" + n + " elements): ");
+            List<Long> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(readLong());
+            return list;
+        }
+
+        public List<Long> nextLongList(int n, String promptMsg) {
+            prompt(promptMsg);
+            List<Long> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(readLong());
+            return list;
+        }
+
+        public List<Double> nextDoubleList(int n) {
+            autoPrompt("Enter double list (" + n + " elements): ");
+            List<Double> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(readDouble());
+            return list;
+        }
+
+        public List<Double> nextDoubleList(int n, String promptMsg) {
+            prompt(promptMsg);
+            List<Double> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(readDouble());
+            return list;
+        }
+
+        public List<String> nextStringList(int n) {
+            autoPrompt("Enter string list (" + n + " elements): ");
+            List<String> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(nextToken());
+            return list;
+        }
+
+        public List<String> nextStringList(int n, String promptMsg) {
+            prompt(promptMsg);
+            List<String> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(nextToken());
+            return list;
+        }
+
+        public <T> List<T> nextList(int n, Supplier<T> reader) {
+            autoPrompt("Enter list (" + n + " elements): ");
+            List<T> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(reader.get());
+            return list;
+        }
+
+        public <T> List<T> nextList(int n, String promptMsg, Supplier<T> reader) {
+            prompt(promptMsg);
+            List<T> list = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) list.add(reader.get());
+            return list;
+        }
+
+        // 2D Lists (List of Lists)
+        public List<List<Integer>> nextIntList2D(int r, int c) {
+            autoPrompt("Enter 2D integer list (" + r + "x" + c + "): ");
+            List<List<Integer>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<Integer> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(readInt());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<Integer>> nextIntList2D(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            List<List<Integer>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<Integer> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(readInt());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<Long>> nextLongList2D(int r, int c) {
+            autoPrompt("Enter 2D long list (" + r + "x" + c + "): ");
+            List<List<Long>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<Long> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(readLong());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<Long>> nextLongList2D(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            List<List<Long>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<Long> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(readLong());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<Double>> nextDoubleList2D(int r, int c) {
+            autoPrompt("Enter 2D double list (" + r + "x" + c + "): ");
+            List<List<Double>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<Double> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(readDouble());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<Double>> nextDoubleList2D(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            List<List<Double>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<Double> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(readDouble());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<String>> nextStringList2D(int r, int c) {
+            autoPrompt("Enter 2D string list (" + r + "x" + c + "): ");
+            List<List<String>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<String> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(nextToken());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public List<List<String>> nextStringList2D(int r, int c, String promptMsg) {
+            prompt(promptMsg);
+            List<List<String>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<String> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(nextToken());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public <T> List<List<T>> nextList2D(int r, int c, Supplier<T> reader) {
+            autoPrompt("Enter 2D list (" + r + "x" + c + "): ");
+            List<List<T>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<T> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(reader.get());
+                list.add(row);
+            }
+            return list;
+        }
+
+        public <T> List<List<T>> nextList2D(int r, int c, String promptMsg, Supplier<T> reader) {
+            prompt(promptMsg);
+            List<List<T>> list = new ArrayList<>(r);
+            for (int i = 0; i < r; i++) {
+                List<T> row = new ArrayList<>(c);
+                for (int j = 0; j < c; j++) row.add(reader.get());
+                list.add(row);
+            }
+            return list;
+        }
+
         public String nextLine() {
+            autoPrompt("Enter line: ");
+            try { return br.readLine(); }
+            catch (IOException e) { return ""; }
+        }
+
+        public String nextLine(String promptMsg) {
+            prompt(promptMsg);
             try { return br.readLine(); }
             catch (IOException e) { return ""; }
         }
     }
 
     /* ============================================================
-        FAST OUTPUT
+        FAST OUTPUT & PRINTING UTILS
     ============================================================ */
 
     public static final PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out));
-    // Usage: out.println(...); out.flush(); at the end
 
-    public static void print(Object o)   { System.out.print(o); }
-    public static void println(Object o) { System.out.println(o); }
+    public static void print(Object o) {
+        if (o == null) {
+            System.out.print("null");
+        } else if (o.getClass().isArray() || o instanceof Collection || o instanceof Map) {
+            System.out.print(formatPretty(o));
+        } else {
+            System.out.print(o);
+        }
+    }
 
+    public static void println(Object o) {
+        if (o == null) {
+            System.out.println("null");
+        } else if (o.getClass().isArray() || o instanceof Collection || o instanceof Map) {
+            System.out.println(formatPretty(o));
+        } else {
+            System.out.println(o);
+        }
+    }
+
+    public static void println() {
+        System.out.println();
+    }
+
+    public static void prettyPrint(Object o) {
+        System.out.print(formatPretty(o));
+    }
+
+    public static void prettyPrintln(Object o) {
+        System.out.println(formatPretty(o));
+    }
+
+    public static void prettyPrintErr(Object o) {
+        System.err.println(formatPretty(o));
+    }
+
+    public static String formatPretty(Object obj) {
+        return formatPrettyInternal(obj, 0);
+    }
+
+    private static String formatPrettyInternal(Object obj, int indent) {
+        if (obj == null) return "null";
+
+        if (obj instanceof String) {
+            return "\"" + obj + "\"";
+        }
+        if (obj instanceof Character) {
+            return "'" + obj + "'";
+        }
+        if (obj instanceof Number || obj instanceof Boolean) {
+            return String.valueOf(obj);
+        }
+
+        // 1D Primitive Arrays
+        if (obj instanceof int[]) return Arrays.toString((int[]) obj);
+        if (obj instanceof long[]) return Arrays.toString((long[]) obj);
+        if (obj instanceof double[]) return Arrays.toString((double[]) obj);
+        if (obj instanceof boolean[]) return Arrays.toString((boolean[]) obj);
+        if (obj instanceof float[]) return Arrays.toString((float[]) obj);
+        if (obj instanceof byte[]) return Arrays.toString((byte[]) obj);
+        if (obj instanceof short[]) return Arrays.toString((short[]) obj);
+        if (obj instanceof char[]) {
+            char[] arr = (char[]) obj;
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < arr.length; i++) {
+                sb.append("'").append(arr[i]).append("'");
+                if (i < arr.length - 1) sb.append(", ");
+            }
+            return sb.append("]").toString();
+        }
+
+        // 2D Primitive Arrays
+        if (obj instanceof int[][]) {
+            int[][] mat = (int[][]) obj;
+            return format2D(mat.length, i -> formatPrettyInternal(mat[i], indent + 2), indent);
+        }
+        if (obj instanceof long[][]) {
+            long[][] mat = (long[][]) obj;
+            return format2D(mat.length, i -> formatPrettyInternal(mat[i], indent + 2), indent);
+        }
+        if (obj instanceof double[][]) {
+            double[][] mat = (double[][]) obj;
+            return format2D(mat.length, i -> formatPrettyInternal(mat[i], indent + 2), indent);
+        }
+        if (obj instanceof boolean[][]) {
+            boolean[][] mat = (boolean[][]) obj;
+            return format2D(mat.length, i -> formatPrettyInternal(mat[i], indent + 2), indent);
+        }
+        if (obj instanceof char[][]) {
+            char[][] mat = (char[][]) obj;
+            return format2D(mat.length, i -> formatPrettyInternal(mat[i], indent + 2), indent);
+        }
+
+        // Object Arrays
+        if (obj instanceof Object[]) {
+            Object[] arr = (Object[]) obj;
+            if (arr.length > 0 && (arr[0] instanceof Object[] || (arr[0] != null && arr[0].getClass().isArray()))) {
+                return format2D(arr.length, i -> formatPrettyInternal(arr[i], indent + 2), indent);
+            }
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < arr.length; i++) {
+                sb.append(formatPrettyInternal(arr[i], indent + 2));
+                if (i < arr.length - 1) sb.append(", ");
+            }
+            return sb.append("]").toString();
+        }
+
+        // Collections & Lists (including List<List<T>>)
+        if (obj instanceof List) {
+            List<?> list = (List<?>) obj;
+            if (list.isEmpty()) return "[]";
+            boolean is2D = list.stream().anyMatch(e -> e instanceof List || e instanceof Collection || (e != null && e.getClass().isArray()));
+            if (is2D) {
+                return format2D(list.size(), i -> formatPrettyInternal(list.get(i), indent + 2), indent);
+            } else {
+                StringBuilder sb = new StringBuilder("[");
+                for (int i = 0; i < list.size(); i++) {
+                    sb.append(formatPrettyInternal(list.get(i), indent + 2));
+                    if (i < list.size() - 1) sb.append(", ");
+                }
+                return sb.append("]").toString();
+            }
+        }
+
+        if (obj instanceof Set) {
+            Set<?> set = (Set<?>) obj;
+            StringBuilder sb = new StringBuilder("{");
+            int idx = 0, size = set.size();
+            for (Object item : set) {
+                sb.append(formatPrettyInternal(item, indent + 2));
+                if (++idx < size) sb.append(", ");
+            }
+            return sb.append("}").toString();
+        }
+
+        if (obj instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) obj;
+            if (map.isEmpty()) return "{}";
+            String ind = " ".repeat(indent + 2);
+            String parentInd = " ".repeat(indent);
+            StringBuilder sb = new StringBuilder("{\n");
+            int idx = 0, size = map.size();
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                sb.append(ind)
+                  .append(formatPrettyInternal(entry.getKey(), indent + 2))
+                  .append(": ")
+                  .append(formatPrettyInternal(entry.getValue(), indent + 2));
+                if (++idx < size) sb.append(",");
+                sb.append("\n");
+            }
+            sb.append(parentInd).append("}");
+            return sb.toString();
+        }
+
+        return String.valueOf(obj);
+    }
+
+    private static String format2D(int rows, IntFunction<String> rowFormatter, int indent) {
+        if (rows == 0) return "[]";
+        String ind = " ".repeat(indent + 2);
+        String parentInd = " ".repeat(indent);
+        StringBuilder sb = new StringBuilder("[\n");
+        for (int i = 0; i < rows; i++) {
+            sb.append(ind).append(rowFormatter.apply(i));
+            if (i < rows - 1) sb.append(",");
+            sb.append("\n");
+        }
+        sb.append(parentInd).append("]");
+        return sb.toString();
+    }
+
+    // Space-separated printing helpers
     public static void printArray(int[] arr) {
+        if (arr == null) return;
         StringBuilder sb = new StringBuilder();
         for (int x : arr) sb.append(x).append(' ');
         System.out.println(sb.toString().trim());
     }
 
     public static void printArray(long[] arr) {
+        if (arr == null) return;
         StringBuilder sb = new StringBuilder();
         for (long x : arr) sb.append(x).append(' ');
         System.out.println(sb.toString().trim());
     }
 
-    public static int[][] to2DArray(List<List<Integer>> list) {
-        int rows = list.size();
-        int cols = list.get(0).size();
+    public static void printArray(double[] arr) {
+        if (arr == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (double x : arr) sb.append(x).append(' ');
+        System.out.println(sb.toString().trim());
+    }
 
-        int[][] result = new int[rows][cols];
-
-        for (int i = 0; i < rows; i++) {
-            List<Integer> row = list.get(i);
-            for (int j = 0; j < cols; j++) {
-                result[i][j] = row.get(j);
-            }
-        }
-        return result;
+    public static <T> void printArray(T[] arr) {
+        if (arr == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (T x : arr) sb.append(x).append(' ');
+        System.out.println(sb.toString().trim());
     }
 
     public static void print2D(int[][] arr) {
+        if (arr == null) return;
         StringBuilder sb = new StringBuilder();
         for (int[] row : arr) {
             for (int x : row) sb.append(x).append(' ');
@@ -107,15 +680,203 @@ public class Utils {
         System.out.print(sb);
     }
 
+    public static void print2D(long[][] arr) {
+        if (arr == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (long[] row : arr) {
+            for (long x : row) sb.append(x).append(' ');
+            sb.append('\n');
+        }
+        System.out.print(sb);
+    }
+
+    public static void print2D(double[][] arr) {
+        if (arr == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (double[] row : arr) {
+            for (double x : row) sb.append(x).append(' ');
+            sb.append('\n');
+        }
+        System.out.print(sb);
+    }
+
+    public static <T> void print2D(T[][] arr) {
+        if (arr == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (T[] row : arr) {
+            for (T x : row) sb.append(x).append(' ');
+            sb.append('\n');
+        }
+        System.out.print(sb);
+    }
+
     public static void printList(List<?> list) {
+        if (list == null) return;
         StringBuilder sb = new StringBuilder();
         for (Object o : list) sb.append(o).append(' ');
         System.out.println(sb.toString().trim());
     }
 
+    public static void print2DList(List<? extends List<?>> list) {
+        if (list == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (List<?> row : list) {
+            for (Object x : row) sb.append(x).append(' ');
+            sb.append('\n');
+        }
+        System.out.print(sb);
+    }
+
+    public static void println2DList(List<? extends List<?>> list) {
+        print2DList(list);
+    }
+
     public static void printMap(Map<?, ?> map) {
+        if (map == null) return;
         for (Map.Entry<?, ?> e : map.entrySet())
             System.out.println(e.getKey() + " -> " + e.getValue());
+    }
+
+    /* ============================================================
+        LIST & ARRAY CONVERSION UTILS
+    ============================================================ */
+
+    public static int[][] to2DArray(List<List<Integer>> list) {
+        if (list == null || list.isEmpty()) return new int[0][0];
+        int rows = list.size();
+        int[][] result = new int[rows][];
+        for (int i = 0; i < rows; i++) {
+            List<Integer> row = list.get(i);
+            if (row == null) {
+                result[i] = new int[0];
+            } else {
+                result[i] = new int[row.size()];
+                for (int j = 0; j < row.size(); j++) {
+                    result[i][j] = row.get(j);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static long[][] to2DLongArray(List<List<Long>> list) {
+        if (list == null || list.isEmpty()) return new long[0][0];
+        int rows = list.size();
+        long[][] result = new long[rows][];
+        for (int i = 0; i < rows; i++) {
+            List<Long> row = list.get(i);
+            if (row == null) {
+                result[i] = new long[0];
+            } else {
+                result[i] = new long[row.size()];
+                for (int j = 0; j < row.size(); j++) {
+                    result[i][j] = row.get(j);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static double[][] to2DDoubleArray(List<List<Double>> list) {
+        if (list == null || list.isEmpty()) return new double[0][0];
+        int rows = list.size();
+        double[][] result = new double[rows][];
+        for (int i = 0; i < rows; i++) {
+            List<Double> row = list.get(i);
+            if (row == null) {
+                result[i] = new double[0];
+            } else {
+                result[i] = new double[row.size()];
+                for (int j = 0; j < row.size(); j++) {
+                    result[i][j] = row.get(j);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String[][] to2DStringArray(List<List<String>> list) {
+        if (list == null || list.isEmpty()) return new String[0][0];
+        int rows = list.size();
+        String[][] result = new String[rows][];
+        for (int i = 0; i < rows; i++) {
+            List<String> row = list.get(i);
+            if (row == null) {
+                result[i] = new String[0];
+            } else {
+                result[i] = row.toArray(new String[0]);
+            }
+        }
+        return result;
+    }
+
+    public static <T> T[][] to2DArray(List<List<T>> list, IntFunction<T[][]> outerGenerator, IntFunction<T[]> innerGenerator) {
+        if (list == null || list.isEmpty()) return outerGenerator.apply(0);
+        int rows = list.size();
+        T[][] result = outerGenerator.apply(rows);
+        for (int i = 0; i < rows; i++) {
+            List<T> row = list.get(i);
+            if (row == null) {
+                result[i] = innerGenerator.apply(0);
+            } else {
+                result[i] = row.toArray(innerGenerator.apply(row.size()));
+            }
+        }
+        return result;
+    }
+
+    public static List<Integer> toList(int[] arr) {
+        if (arr == null) return new ArrayList<>();
+        List<Integer> list = new ArrayList<>(arr.length);
+        for (int x : arr) list.add(x);
+        return list;
+    }
+
+    public static List<Long> toList(long[] arr) {
+        if (arr == null) return new ArrayList<>();
+        List<Long> list = new ArrayList<>(arr.length);
+        for (long x : arr) list.add(x);
+        return list;
+    }
+
+    public static List<Double> toList(double[] arr) {
+        if (arr == null) return new ArrayList<>();
+        List<Double> list = new ArrayList<>(arr.length);
+        for (double x : arr) list.add(x);
+        return list;
+    }
+
+    public static <T> List<T> toList(T[] arr) {
+        if (arr == null) return new ArrayList<>();
+        return new ArrayList<>(Arrays.asList(arr));
+    }
+
+    public static List<List<Integer>> toList2D(int[][] mat) {
+        if (mat == null) return new ArrayList<>();
+        List<List<Integer>> list = new ArrayList<>(mat.length);
+        for (int[] row : mat) list.add(toList(row));
+        return list;
+    }
+
+    public static List<List<Long>> toList2D(long[][] mat) {
+        if (mat == null) return new ArrayList<>();
+        List<List<Long>> list = new ArrayList<>(mat.length);
+        for (long[] row : mat) list.add(toList(row));
+        return list;
+    }
+
+    public static List<List<Double>> toList2D(double[][] mat) {
+        if (mat == null) return new ArrayList<>();
+        List<List<Double>> list = new ArrayList<>(mat.length);
+        for (double[] row : mat) list.add(toList(row));
+        return list;
+    }
+
+    public static <T> List<List<T>> toList2D(T[][] mat) {
+        if (mat == null) return new ArrayList<>();
+        List<List<T>> list = new ArrayList<>(mat.length);
+        for (T[] row : mat) list.add(toList(row));
+        return list;
     }
 
     /* ============================================================

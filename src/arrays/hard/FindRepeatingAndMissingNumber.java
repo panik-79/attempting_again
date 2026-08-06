@@ -25,6 +25,7 @@ public class FindRepeatingAndMissingNumber {
 
     public static Utils.Pair<Integer, Integer> findRepeatingAndMissingNumber (int[] arr) {
 
+        return new Utils.Pair<>(1, 2);
     }
 
 }

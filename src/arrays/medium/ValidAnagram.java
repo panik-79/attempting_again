@@ -2,9 +2,6 @@ package arrays.medium;
 
 import util.Utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ValidAnagram {
 
     public static void main(String[] args) {

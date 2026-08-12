@@ -1,4 +1,4 @@
-package recursion.medium;
+package recursion.medium.subsets;
 
 import util.Utils;
 

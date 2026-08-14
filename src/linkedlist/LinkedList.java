@@ -157,6 +157,27 @@ public class LinkedList {
         }
     }
 
+    public void insertBefore(int value, int target) {
+
+        Node dummy = new Node(0, head);
+
+        Node prev = dummy;
+        Node curr = head;
+
+        while (curr != null) {
+
+            if (curr.data == target) {
+                prev.next = new Node(value, curr);
+            }
+
+            prev = curr;
+            curr = curr.next;
+            curr = curr.next;
+        }
+
+        head = dummy.next;
+    }
+
     public static void main(String[] args) {
 
         LinkedList list = new LinkedList();
@@ -168,8 +189,8 @@ public class LinkedList {
 
         list.print();
         Utils.println();
-        list.deleteAll(10);
 
+        list.insertBefore(5, 10);
         list.print();
     }
 }

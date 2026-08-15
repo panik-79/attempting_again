@@ -5,7 +5,9 @@ import util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-// https://leetcode.com/problems/permutations/description
+// LeetCode 46
+// https://leetcode.com/problems/permutations/description/
+
 public class GeneratePermutations {
 
     /*
@@ -14,16 +16,9 @@ public class GeneratePermutations {
      * ============================================================
      *
      * Given a string containing distinct characters, generate
-     * all possible permutations of the string.
+     * all possible permutations.
      *
-     * A permutation is an arrangement of all characters where
-     * the order of the characters can change.
-     *
-     * Each character must be used exactly once.
-     *
-     * ------------------------------------------------------------
-     *
-     * Example 1:
+     * Example:
      *
      * Input:
      *     ABC
@@ -32,99 +27,14 @@ public class GeneratePermutations {
      *     [ABC, ACB, BAC, BCA, CAB, CBA]
      *
      * Number of permutations:
-     *     3! = 6
+     *     n!
      *
-     * ------------------------------------------------------------
-     *
-     * Example 2:
-     *
-     * Input:
-     *     AB
-     *
-     * Output:
-     *     [AB, BA]
-     *
-     * ------------------------------------------------------------
-     *
-     * Example 3:
-     *
-     * Input:
-     *     A
-     *
-     * Output:
-     *     [A]
-     *
-     * ------------------------------------------------------------
-     *
-     * Important:
-     *
-     * - All characters are distinct.
-     * - Every character must be used exactly once.
-     * - Order matters.
-     *
-     * ------------------------------------------------------------
-     *
-     * Approach:
-     *
-     * Solve the smaller problem first.
-     *
-     * For example:
-     *
-     *     ABC
-     *      ↓
-     *     BC
-     *      ↓
-     *      C
-     *
-     * Once we have all permutations of "BC", insert "A"
-     * at every possible position in every smaller permutation.
-     *
-     * Example:
-     *
-     *     smaller = [BC, CB]
-     *
-     * Insert A into BC:
-     *
-     *     ABC
-     *     BAC
-     *     BCA
-     *
-     * Insert A into CB:
-     *
-     *     ACB
-     *     CAB
-     *     CBA
-     *
-     * ------------------------------------------------------------
-     *
-     * Base Case:
-     *
-     * When there are no characters left, return [""]
-     * instead of [].
-     *
-     * The empty string represents one valid permutation of
-     * zero characters and gives the previous call something
-     * into which it can insert its character.
-     *
-     * ------------------------------------------------------------
-     *
-     * Time Complexity:
-     *
-     * There are n! permutations and every final string has
-     * length n.
-     *
-     *     O(n * n!)
-     *
-     * This includes the cost of constructing the output strings.
-     *
-     * ------------------------------------------------------------
-     *
-     * Space Complexity:
-     *
-     * O(n * n!) including the returned result.
+     * Characters are distinct and every character must be used
+     * exactly once.
      *
      * ============================================================
      */
+
 
     public static void main(String[] args) {
 
@@ -132,58 +42,168 @@ public class GeneratePermutations {
 
         String str = scanner.next("Enter string: ");
 
-        List<String> result = recursive(str, 0);
+        /*
+         * ========================================================
+         * Approach 1
+         * ========================================================
+         *
+         * Solve the smaller problem first.
+         *
+         * Example:
+         *
+         *     ABC
+         *      ↓
+         *     BC
+         *      ↓
+         *      C
+         *
+         * Get permutations of "BC":
+         *
+         *     [BC, CB]
+         *
+         * Then insert A at every possible position.
+         *
+         *     BC → ABC, BAC, BCA
+         *     CB → ACB, CAB, CBA
+         *
+         * ========================================================
+         */
 
-        Utils.println("Permutations: " + result);
-        Utils.println("Count: " + result.size());
+        List<String> result1 = recursive(str, 0);
+
+        Utils.println("Approach 1:");
+        Utils.println(result1);
+        Utils.println("Count: " + result1.size());
+
+
+        /*
+         * ========================================================
+         * Approach 2 — Backtracking
+         * ========================================================
+         *
+         * Build one permutation step by step.
+         *
+         *     Choose
+         *       ↓
+         *     Recurse
+         *       ↓
+         *     Undo
+         *
+         * sb      → current permutation
+         * visited → which characters are already used
+         *
+         * ========================================================
+         */
+
+        boolean[] visited = new boolean[str.length()];
+        List<String> result2 = new ArrayList<>();
+
+        generate(
+                str,
+                new StringBuilder(),
+                visited,
+                result2
+        );
+
+        Utils.println("\nApproach 2 — Backtracking:");
+        Utils.println(result2);
+        Utils.println("Count: " + result2.size());
     }
 
+
     /*
+     * ============================================================
+     * APPROACH 1
+     * Smaller problem → insert current character
+     * ============================================================
+     *
      * recursive(str, idx)
      *
-     * Returns all permutations of the substring:
+     * Returns all permutations of:
      *
      *     str[idx ... end]
      *
-     * Example:
-     *
-     *     recursive("ABC", 1)
-     *
-     * means:
-     *
-     *     Generate all permutations of "BC".
+     * ============================================================
      */
+
     public static List<String> recursive(String str, int idx) {
 
-        // No characters remaining.
-        // There is one valid permutation: the empty string.
+        // One valid permutation of zero characters is "".
         if (idx == str.length()) {
             return List.of("");
         }
 
-        // First, solve the smaller problem.
+        // Solve smaller problem first.
         List<String> smaller = recursive(str, idx + 1);
 
         List<String> result = new ArrayList<>();
 
         String currentChar = String.valueOf(str.charAt(idx));
 
-        /*
-         * Insert the current character into every possible position of every smaller permutation.
-         * For "BC", there are 3 possible positions for A:
-         *
-         *     |BC
-         *     B|C
-         *     BC|
-         */
         for (String s : smaller) {
+
             // A string of length m has m + 1 insertion positions.
             for (int i = 0; i <= s.length(); i++) {
-                String permutation = s.substring(0, i) + currentChar + s.substring(i);
+
+                String permutation =
+                        s.substring(0, i)
+                                + currentChar
+                                + s.substring(i);
+
                 result.add(permutation);
             }
         }
 
         return result;
+    }
+
+
+    /*
+     * ============================================================
+     * APPROACH 2
+     * Classic Backtracking
+     * ============================================================
+     *
+     * At every level:
+     *
+     *     1. Choose an unused character
+     *     2. Add it to current permutation
+     *     3. Recurse
+     *     4. Undo the choice
+     *
+     * ============================================================
+     */
+
+    public static void generate(
+            String str,
+            StringBuilder current,
+            boolean[] visited,
+            List<String> result) {
+
+        // A complete permutation has been constructed.
+        if (current.length() == str.length()) {
+            result.add(current.toString());
+            return;
+        }
+
+        // Try every character as the next choice.
+        for (int i = 0; i < str.length(); i++) {
+
+            // Cannot use the same character twice.
+            if (visited[i]) {
+                continue;
+            }
+
+            // Choose
+            current.append(str.charAt(i));
+            visited[i] = true;
+
+            // Explore
+            generate(str, current, visited, result);
+
+            // Undo
+            current.deleteCharAt(current.length() - 1);
+            visited[i] = false;
+        }
     }
 }
